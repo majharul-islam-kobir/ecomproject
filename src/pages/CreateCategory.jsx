@@ -1,99 +1,143 @@
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { getDatabase, push, ref,  } from "firebase/database";
-import app from '../database/firebaseConfig';
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { categoryFormSchema } from "../validation/validationSchema";
+import {
+    getFirebaseDataForEdit,
+    setDataToFirebase,
+    updateDataFromFirebase,
+} from "../database/firebaseUtils";
+import { useNavigate, useParams } from "react-router";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
-const CreateCategory = () => {
-  // Yup schema for validation
-  const schema = yup.object().shape({
-    categoryName: yup
-      .string()
-      .required('Category Name is required')
-      .min(5, 'Category Name must be at least 5 characters'),
-    categoryDescription: yup
-      .string()
-      .required('Category Description is required')
-      .min(5, 'Category Description must be at least 5 characters'),
-    productRating: yup
-      .number()
-      .required('Product Rating is required')
-      .min(1, 'Rating must be at least 1')
-      .max(5, 'Rating cannot be greater than 5'),
-  });
+export default function CreateCategory() {
+    const navigate = useNavigate();
+    const params = useParams();
 
-  // useForm hook for managing form state and validation
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset,
+    } = useForm({
+        resolver: yupResolver(categoryFormSchema),
+        defaultValues: {
+            categoryName: "",
+            categoryImageUrl: "",
+            categoryDescription: "", // New field
+        },
+    });
 
-  // onSubmit handler for the form
-  const onSubmit = (data) => {
-    console.log(data);
-    
-    const db = getDatabase(app);
-    push(ref(db, 'categories'), data);
-  };
+    const onSubmit = (data) => {
+        if (params.id) {
+            updateDataFromFirebase(`categories/${params.id}`, data);
+            toast.success("Category updated successfully");
+        } else {
+            setDataToFirebase("categories", data);
+            toast.success("Category created successfully");
+        }
+        navigate("/");
+    };
 
-  return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-bold text-center text-gray-700 mb-6">
-        Create New Category
-      </h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block text-gray-600 font-medium mb-2">Category Name</label>
-          <input
-            {...register('categoryName')}
-            type="text"
-            placeholder="Enter category name"
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
-          />
-          {errors.categoryName && (
-            <p className="text-red-500">{errors.categoryName?.message}</p>
-          )}
+    useEffect(() => {
+        const fetchCategoryData = async () => {
+            if (params.id) {
+                const categoryData = await getFirebaseDataForEdit(`categories/${params.id}`);
+                reset(categoryData);
+            } else {
+                reset({
+                    categoryName: "",
+                    categoryImageUrl: "",
+                    categoryDescription: "", // Reset for new field
+                });
+            }
+        };
+        fetchCategoryData();
+    }, [params.id, reset]);
+
+    return (
+        <div className="max-w-md mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg">
+            <h2 className="text-2xl font-bold mb-4 text-center">
+                {params.id ? "Edit Category" : "Add Category"}
+            </h2>
+            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+                {/* Category Name */}
+                <div>
+                    <label
+                        htmlFor="categoryName"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Category Name
+                    </label>
+                    <input
+                        {...register("categoryName")}
+                        type="text"
+                        id="categoryName"
+                        name="categoryName"
+                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        placeholder="Enter category name"
+                    />
+                    {errors.categoryName && (
+                        <span className="text-red-400 text-sm">
+                            {errors.categoryName?.message}
+                        </span>
+                    )}
+                </div>
+
+                {/* Category Image URL */}
+                <div>
+                    <label
+                        htmlFor="categoryImageUrl"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Category Image URL
+                    </label>
+                    <input
+                        {...register("categoryImageUrl")}
+                        type="url"
+                        id="categoryImageUrl"
+                        name="categoryImageUrl"
+                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        placeholder="Enter category image URL"
+                    />
+                    {errors.categoryImageUrl && (
+                        <span className="text-red-400 text-sm">
+                            {errors.categoryImageUrl?.message}
+                        </span>
+                    )}
+                </div>
+
+                {/* Category Description */}
+                <div>
+                    <label
+                        htmlFor="categoryDescription"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Category Description
+                    </label>
+                    <textarea
+                        {...register("categoryDescription")}
+                        id="categoryDescription"
+                        name="categoryDescription"
+                        className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                        placeholder="Enter category description"
+                        rows="4"
+                    ></textarea>
+                    {errors.categoryDescription && (
+                        <span className="text-red-400 text-sm">
+                            {errors.categoryDescription?.message}
+                        </span>
+                    )}
+                </div>
+
+                {/* Submit Button */}
+                <button
+                    type="submit"
+                    className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-200"
+                >
+                    {params.id ? "Update Category" : "Add Category"}
+                </button>
+            </form>
         </div>
-
-        <div>
-          <label className="block text-gray-600 font-medium mb-2">Category Description</label>
-          <textarea
-            {...register('categoryDescription')}
-            placeholder="Enter category description"
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
-          />
-          {errors.categoryDescription && (
-            <p className="text-red-500">{errors.categoryDescription?.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-gray-600 font-medium mb-2">Product Rating</label>
-          <input
-            {...register('productRating')}
-            type="number"
-            placeholder="Enter product rating (1-5)"
-            min="1"
-            max="5"
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-300"
-          />
-          {errors.productRating && (
-            <p className="text-red-500">{errors.productRating?.message}</p>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 focus:outline-none"
-        >
-          Create New Category
-        </button>
-      </form>
-    </div>
-  );
-};
-
-export default CreateCategory;
+    );
+}

@@ -1,27 +1,22 @@
-import { Route, Routes } from 'react-router'
-import DashboardLayout from './layout/DashboardLayout'
-import HomeDashboard from './pages/HomeDashbord'
-import CreatProduct from './pages/CreatProduct'
-import Error from './Error'
-import CreateCategory from './pages/CreateCategory'
+import { Route, Routes } from "react-router";
+import DashboardLayout from "./layout/DashboardLayout";
+import HomeDashboard from "./pages/HomeDashboard";
+import Error from "./Error";
+import CreateProduct from "./pages/CreateProduct";
+import CreateCategory from "./pages/CreateCategory";
 
-function App() {
-  return (
-    
-    <Routes>
-         <Route path='/' element={<DashboardLayout />}>
-             <Route index element={<HomeDashboard />}/>
-             <Route path='/creatProduct' element={<CreatProduct />}/>
-             <Route path='/createCategory' element={<CreateCategory />}/>
+export default function App() {
+    return (
+        <Routes>
+            <Route path="/" element={<DashboardLayout />}>
+                <Route index element={<HomeDashboard />} />
+                <Route path="create-category" element={<CreateCategory />} />
+                <Route path="edit-category/:id" element={<CreateCategory />} />
+                <Route path="create-product" element={<CreateProduct />} />
 
-
-             {/* error route */}
-            <Route path='/*' element={<Error />} />
-
-         </Route>
-    </Routes>
-    
-  )
+                {/* Error Route */}
+                <Route path="/*" element={<Error />} />
+            </Route>
+        </Routes>
+    );
 }
-
-export default App

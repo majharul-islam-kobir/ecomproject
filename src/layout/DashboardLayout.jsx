@@ -1,23 +1,38 @@
-import { Link, Outlet } from 'react-router'
+import { Link, Outlet } from "react-router";
+import { ToastContainer } from "react-toastify";
 
-function DashboardLayout() {
-  return (
-    <>
-        <header className="flex justify-between items-center px-6 py-3 bg-white border-b shadow-sm">
-      {/* Left Section */}
-      <div>
-        <Link to="/" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Home</Link>
-      </div>
+export default function DashboardLayout() {
+    return (
+        <>
+            <header className="bg-white shadow-md py-4">
+                <div className="container mx-auto flex justify-between items-center px-4">
+                    <Link
+                        to="/"
+                        className="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition"
+                    >
+                        Home
+                    </Link>
 
-      {/* Right Section */}
-      <div className="flex gap-3">
-        <Link to="/creatProduct" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Create new Product</Link>
-        <Link to="/createCategory" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Create new Category</Link>
-      </div>
-    </header>
-       <div className='py-5'><Outlet /></div>
-    </>
-  )
+                    <div className="space-x-4">
+                        <Link
+                            to="create-product"
+                            className="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition"
+                        >
+                            Create new Product
+                        </Link>
+                        <Link
+                            to="create-category"
+                            className="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition"
+                        >
+                            Create new Category
+                        </Link>
+                    </div>
+                </div>
+            </header>
+            <div className="py-5">
+                <Outlet />
+                <ToastContainer />
+            </div>
+        </>
+    );
 }
-
-export default DashboardLayout
