@@ -8,7 +8,7 @@ import {
 } from "firebase/database";
 import app from "./firebaseConfig";
 
-const db = getDatabase(app);
+export const db = getDatabase(app);
 
 // Read/Get data from database;
 export const getFirebaseData = async (tableName) => {
@@ -66,5 +66,37 @@ export const removeDataFromFirebase = (tableName) => {
         } catch (error) {
             reject(error);
         }
+    });
+};
+
+// ******************************* User Profile *************************** //
+export const createUserProfile = async (data) => {
+    const { id, name, role, email } = data;
+    set(ref(db, "userProfile/" + id), {
+        name,
+        role,
+        email,
+    });
+};
+
+export const getProfile = async (id) => {
+    return new Promise((resolve, reject) => {
+        try {
+            onValue(ref(db, "userProfile/" + id), (snapshot) => {
+                resolve(snapshot.val());
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+// ******************************* Add Product to cart *************************** //
+export const setProductToCart = (data) => {
+    const { userId, productId, quantity } = data;
+
+    push(ref(db, "carts/" + userId), {
+        productId,
+        quantity,
     });
 };
