@@ -43,7 +43,7 @@ export default function SingleCartList({ cart }) {
                     className="absolute top-[-5px] right-[-5px] z-10"
                 >
                     <svg
-                        className="w-5 h-5 text-red-500 dark:text-white"
+                        className="w-5 h-5 text-red-500 "
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
