@@ -4,37 +4,44 @@ import SingleCartList from "./SingleCartList";
 import { ref, remove } from "firebase/database";
 import { db } from "../../../database/firebaseUtils";
 import { toast } from "react-toastify";
+import { useMemo } from "react";
 
 export default function CartDetails() {
     const { user } = useSelector((store) => store.auth);
     const { carts } = useSelector((store) => store.carts);
     const { products } = useSelector((store) => store.products);
 
-    const updateCarts = carts.map((cart) => {
-        let findProduct = products.find(
-            (product) => product.id === cart.productId
-        );
-        return {
-            cartId: cart.id,
-            productId: cart.productId,
-            productName: findProduct.productName,
-            productImage: findProduct.productImageUrl,
-            productPrice: findProduct.productPrice,
-            quantity: cart.quantity,
-        };
-    });
+    const updateCarts = useMemo(() => {
+        return carts.map((cart) => {
+            let findProduct = products.find(
+                (product) => product.id === cart.productId
+            );
+            return {
+                cartId: cart.id,
+                productId: cart.productId,
+                productName: findProduct?.productName || "Unknown",
+                productImage: findProduct?.productImageUrl || "",
+                productPrice: findProduct?.productPrice || 0,
+                quantity: cart.quantity,
+            };
+        });
+    }, [carts, products]);
 
-    let totalPrice = updateCarts.reduce((total, cart) => {
-        return total + cart.productPrice * cart.quantity;
-    }, 0);
+    const totalPrice = useMemo(() => {
+        return updateCarts.reduce((total, cart) => {
+            return total + cart.productPrice * cart.quantity;
+        }, 0);
+    }, [updateCarts]);
 
     if (!user) {
         return <Navigate to={"/login"} />;
     }
 
     const handleClick = () => {
-        remove(ref(db, `carts/${user.id}`));
-        toast.success("Product removed from cart");
+        if (window.confirm("Are you sure you want to remove all items?")) {
+            remove(ref(db, `carts/${user.id}`));
+            toast.success("All products removed from the cart!");
+        }
     };
 
     return (
