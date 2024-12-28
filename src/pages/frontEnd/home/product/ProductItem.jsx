@@ -74,81 +74,83 @@ export default function ProductItem({ product, onFavorite }) {
           <p className="text-red-600 font-semibold text-lg">
             ${productPrice.toFixed(2)}
           </p>
+          <div className="flex justify-between items-center">
+            {/* Rating Section */}
+            <div className="flex mt-3 ">
+              {Array(5)
+                .fill(0)
+                .map((_, index) => (
+                  <span key={index}>
+                    {index < rating ? (
+                      <AiFillStar className="text-yellow-500" />
+                    ) : (
+                      <AiOutlineStar className="text-gray-400" />
+                    )}
+                  </span>
+                ))}
+            </div>
+          
 
-          {/* Rating Section */}
-          <div className="flex mb-4 mt-3 gap-1">
-            {Array(5)
-              .fill(0)
-              .map((_, index) => (
-                <span key={index}>
-                  {index < rating ? (
-                    <AiFillStar className="text-yellow-500" />
-                  ) : (
-                    <AiOutlineStar className="text-gray-400" />
-                  )}
-                </span>
-              ))}
+          <div className="sm:mt-3 flex  justify-between ">
+            {!isFavorite ? (
+              <svg
+                onClick={() => onFavorite(id)}
+                className="cursor-pointer w-6 h-6 text-red-600 dark:text-white hover:scale-110 transition-transform"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"
+                />
+              </svg>
+            ) : (
+              <svg
+                onClick={() => onFavorite(id)}
+                className="cursor-pointer w-6 h-6 text-red-600  dark:text-white hover:scale-110 transition-transform"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="m12.75 20.66 6.184-7.098c2.677-2.884 2.559-6.506.754-8.705-.898-1.095-2.206-1.816-3.72-1.855-1.293-.034-2.652.43-3.963 1.442-1.315-1.012-2.678-1.476-3.973-1.442-1.515.04-2.825.76-3.724 1.855-1.806 2.201-1.915 5.823.772 8.706l6.183 7.097c.19.216.46.34.743.34a.985.985 0 0 0 .743-.34Z" />
+              </svg>
+            )}
+
+            <button
+              onClick={handleAddToCart}
+              disabled={activeCart ? true : false}
+              className="bg-red-600 rounded text-white py-2 px-2  disabled:bg-red-200 hover:bg-red-700 transition-colors"
+            >
+              <svg
+                className="w-6 h-6 text-white dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
+                />
+              </svg>
+            </button>
           </div>
-        </div>
-
-        <div className="mt-3 sm:mt-0 flex flex-col items-center">
-          {!isFavorite ? (
-            <svg
-              onClick={() => onFavorite(id)}
-              className="cursor-pointer w-6 h-6 text-red-600 dark:text-white hover:scale-110 transition-transform"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"
-              />
-            </svg>
-          ) : (
-            <svg
-              onClick={() => onFavorite(id)}
-              className="cursor-pointer w-6 h-6 text-red-600 dark:text-white hover:scale-110 transition-transform"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="m12.75 20.66 6.184-7.098c2.677-2.884 2.559-6.506.754-8.705-.898-1.095-2.206-1.816-3.72-1.855-1.293-.034-2.652.43-3.963 1.442-1.315-1.012-2.678-1.476-3.973-1.442-1.515.04-2.825.76-3.724 1.855-1.806 2.201-1.915 5.823.772 8.706l6.183 7.097c.19.216.46.34.743.34a.985.985 0 0 0 .743-.34Z" />
-            </svg>
-          )}
-
-          <button
-            onClick={handleAddToCart}
-            disabled={activeCart ? true : false}
-            className="bg-red-600 rounded text-white py-2 px-2 mt-2 disabled:bg-red-200 hover:bg-red-700 transition-colors"
-          >
-            <svg
-              className="w-6 h-6 text-white dark:text-white"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
-              />
-            </svg>
-          </button>
+          </div>
         </div>
       </div>
 
