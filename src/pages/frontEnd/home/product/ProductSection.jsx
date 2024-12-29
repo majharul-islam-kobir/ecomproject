@@ -18,6 +18,7 @@ export default function ProductSection() {
     });
 
     const handleFavorite = (key) => {
+    
         let newProductsList = products.map((product) => {
             if (product.id === key) {
                 return {

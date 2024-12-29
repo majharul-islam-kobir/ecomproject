@@ -36,7 +36,6 @@ export default function ProductItem({ product, onFavorite }) {
     navigate(`/single-product/${id}`);
   };
 
-  // Reusable AddToCart Function
   const handleAddToCart = (e, productId) => {
     e.stopPropagation();
     if (user) {
@@ -52,7 +51,7 @@ export default function ProductItem({ product, onFavorite }) {
 
   return (
     <div
-      className="border bg-white p-4 rounded-lg text-center  shadow-md hover:shadow-lg transition-shadow duration-300"
+      className="border bg-white p-4 rounded-lg text-center shadow-md hover:shadow-lg transition-shadow duration-300"
       onClick={() => setIsPopup(true)}
     >
       <img
@@ -75,7 +74,6 @@ export default function ProductItem({ product, onFavorite }) {
             ${productPrice.toFixed(2)}
           </p>
           <div className="flex justify-between items-center">
-            {/* Rating Section */}
             <div className="flex mt-3 ">
               {Array(5)
                 .fill(0)
@@ -91,52 +89,38 @@ export default function ProductItem({ product, onFavorite }) {
             </div>
 
             <div className="sm:mt-3 flex mx-10 justify-between">
-              {!isFavorite ? (
-                <svg
-                  onClick={() => onFavorite(id)}
-                  className="cursor-pointer w-10 h-10 mr-4 text-red-600   hover:scale-110  transition-transform"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  onClick={() => onFavorite(id)}
-                  className="cursor-pointer w-10 h-10 mr-4 text-red-600    hover:scale-110 transition-transform"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="m12.75 20.66 6.184-7.098c2.677-2.884 2.559-6.506.754-8.705-.898-1.095-2.206-1.816-3.72-1.855-1.293-.034-2.652.43-3.963 1.442-1.315-1.012-2.678-1.476-3.973-1.442-1.515.04-2.825.76-3.724 1.855-1.806 2.201-1.915 5.823.772 8.706l6.183 7.097c.19.216.46.34.743.34a.985.985 0 0 0 .743-.34Z" />
-                </svg>
-              )}
+              <svg
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFavorite(id);
+                }}
+                className={`cursor-pointer w-10 h-10 mr-4 text-red-600 hover:scale-110 transition-transform ${
+                  isFavorite ? "fill-current" : "fill-none"
+                }`}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d={`${
+                    isFavorite
+                      ? "m12.75 20.66 6.184-7.098c2.677-2.884 2.559-6.506.754-8.705-.898-1.095-2.206-1.816-3.72-1.855-1.293-.034-2.652.43-3.963 1.442-1.315-1.012-2.678-1.476-3.973-1.442-1.515.04-2.825.76-3.724 1.855-1.806 2.201-1.915 5.823.772 8.706l6.183 7.097c.19.216.46.34.743.34a.985.985 0 0 0 .743-.34Z"
+                      : "M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"
+                  }`}
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                />
+              </svg>
 
               <button
-                onClick={(e) => handleAddToCart(e, id)} // Passing ID to AddToCart function
+                onClick={(e) => handleAddToCart(e, id)}
                 disabled={activeCart ? true : false}
                 className="bg-red-600 rounded text-white py-2 px-2 disabled:bg-red-200 hover:bg-red-700 transition-colors"
               >
                 <svg
-                  className="w-6 h-6 text-white dark:text-white "
-                  aria-hidden="true"
+                  className="w-6 h-6 text-white dark:text-white"
                   xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="none"
                   viewBox="0 0 24 24"
                 >
                   <path
@@ -159,7 +143,7 @@ export default function ProductItem({ product, onFavorite }) {
           onClose={closeHandler}
           onFavorite={() => onFavorite(id)}
           product={product}
-          activeCart={activeCart} // Passing activeCart to Popup
+          activeCart={activeCart}
         />
       )}
     </div>
