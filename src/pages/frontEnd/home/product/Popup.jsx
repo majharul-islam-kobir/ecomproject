@@ -38,10 +38,10 @@ export default function Popup({
           <span className="text-red-600 text-sm">{productCategory}</span>
           <p className="mt-3">Price: ${productPrice.toFixed(2)}</p>
 
-          <div className="flex items-center mt-2">
+          <div className="flex items-center justify-center  mt-2">
             <FaHeart
               onClick={() => onFavorite()}
-              className={`cursor-pointer w-6 h-6 ${
+              className={`cursor-pointer w-10 h-10 mr-4 ${
                 isFavorite
                   ? "text-red-600 fill-current"
                   : "text-red-600 dark:text-white"

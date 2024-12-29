@@ -94,7 +94,7 @@ export default function ProductItem({ product, onFavorite }) {
               {!isFavorite ? (
                 <svg
                   onClick={() => onFavorite(id)}
-                  className="cursor-pointer w-6 h-6 text-red-600 dark:text-white hover:scale-110  transition-transform"
+                  className="cursor-pointer w-10 h-10 mr-4 text-red-600   hover:scale-110  transition-transform"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -113,7 +113,7 @@ export default function ProductItem({ product, onFavorite }) {
               ) : (
                 <svg
                   onClick={() => onFavorite(id)}
-                  className="cursor-pointer w-6 h-6 text-red-600  dark:text-white hover:scale-110 transition-transform"
+                  className="cursor-pointer w-10 h-10 mr-4 text-red-600    hover:scale-110 transition-transform"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"

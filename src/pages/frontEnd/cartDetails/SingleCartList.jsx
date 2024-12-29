@@ -102,7 +102,7 @@ export default function SingleCartList({ cart }) {
                     <button
                         onClick={handlePlus}
                         disabled={false}
-                        className="w-6 h-6 rounded-sm flex justify-center items-center bg-blue-600 text-white disabled:bg-blue-400"
+                        className="w-6 h-6 rounded-sm flex justify-between items-center bg-blue-600 text-white disabled:bg-blue-400"
                     >
                         <svg
                             className="w-4 h-4 text-white dark:text-white"

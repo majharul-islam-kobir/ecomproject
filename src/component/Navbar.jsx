@@ -1,11 +1,20 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom"; // Updated for consistency
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { carts = [] } = useSelector((store) => store.carts); // Default carts = []
+  const { carts = [] } = useSelector((store) => store.carts);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Pages", path: "/pages" },
+    { name: "User Account", path: "/user-account" },
+    { name: "Vendor Account", path: "/vendor-account" },
+    { name: "Track My Orders", path: "/track-orders" },
+    { name: "Back to Demos", path: "/demos" },
+  ];
 
   return (
     <header className="bg-blue-900 text-white sticky top-0 z-10">
@@ -16,20 +25,15 @@ const Navbar = () => {
           <p className="text-sm">support@ui-lib.com</p>
         </div>
         <div className="flex items-center space-x-4">
-          <a
-            href="#"
-            onClick={(e) => e.preventDefault()}
-            className="text-sm hover:underline"
-          >
-            Theme FAQ's
-          </a>
-          <a
-            href="#"
-            onClick={(e) => e.preventDefault()}
-            className="text-sm hover:underline"
-          >
-            Need Help?
-          </a>
+          {["Theme FAQ's", "Need Help?"].map((text, index) => (
+            <button
+              key={index}
+              onClick={(e) => e.preventDefault()}
+              className="text-sm hover:underline"
+            >
+              {text}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -37,13 +41,8 @@ const Navbar = () => {
       <div className="bg-white shadow">
         <div className="container mx-auto flex justify-between items-center py-4 px-4">
           {/* Logo */}
-          <div className="flex items-center">
-            <h1
-              onClick={() => navigate("/")}
-              className="text-red-500 font-bold text-lg cursor-pointer"
-            >
-              divineshop
-            </h1>
+          <div onClick={() => navigate("/")} className="cursor-pointer">
+            <h1 className="text-red-500 font-bold text-lg">divineshop</h1>
           </div>
 
           {/* Search Box */}
@@ -63,7 +62,7 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Menu Toggle */}
-          <div className="flex items-center space-x-4 lg:hidden">
+          <div className="lg:hidden">
             <button
               className="text-gray-700 hover:text-black"
               onClick={() => setMenuOpen((prev) => !prev)}
@@ -77,59 +76,36 @@ const Navbar = () => {
                 stroke="currentColor"
                 strokeWidth={2}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
               </svg>
             </button>
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-4 text-black">
-            {[
-              "Home",
-              "Pages",
-              "User Account",
-              "Vendor Account",
-              "Track My Orders",
-              "Back to Demos",
-            ].map((item, index) => (
-              <a
-                key={index}
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                className="text-sm hover:underline"
-              >
-                {item}
-              </a>
+          <nav className="hidden lg:flex space-x-4 text-black">
+            {navLinks.map(({ name, path }, index) => (
+              <Link key={index} to={path} className="text-sm hover:underline">
+                {name}
+              </Link>
             ))}
-          </div>
+          </nav>
 
           {/* User Icon */}
-          <button
-            aria-label="User Account"
-            className="relative text-gray-700 hover:text-black"
-          >
+          <button aria-label="User Account" className="relative text-gray-700 hover:text-black">
             <svg
               className="w-6 h-6 text-gray-800 dark:text-white"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
             >
-              <path
-                stroke="currentColor"
-                strokeWidth="2"
-                d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-              />
+              <path stroke="currentColor" strokeWidth="2" d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
             </svg>
           </button>
 
           {/* Cart Icon */}
           <button
             onClick={() => navigate("/cart-details")}
-            className="relative text-gray-700 hover:text-black sm:p-2 p-3 rounded-full"
+            className="relative text-gray-700 hover:text-black"
             aria-label="Cart"
           >
             <svg
@@ -146,7 +122,7 @@ const Navbar = () => {
                 d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"
               />
             </svg>
-            <span className="absolute top-[-5px] right-[-5px] bg-red-500 mt-4 text-white text-[10px] font-bold rounded-full px-1 py-0.5">
+            <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-1">
               {carts.length}
             </span>
           </button>
@@ -156,20 +132,9 @@ const Navbar = () => {
         {menuOpen && (
           <div className="lg:hidden bg-gray-100 py-4 text-black">
             <div className="flex flex-col items-center space-y-4">
-              {[
-                { name: "Home", path: "/" },
-                { name: "Pages", path: "/pages" },
-                { name: "User Account", path: "/user-account" },
-                { name: "Vendor Account", path: "/vendor-account" },
-                { name: "Track My Orders", path: "/track-orders" },
-                { name: "Back to Demos", path: "/demos" },
-              ].map((item, index) => (
-                <Link
-                  key={index}
-                  to={item.path}
-                  className="text-sm hover:underline"
-                >
-                  {item.name}
+              {navLinks.map(({ name, path }, index) => (
+                <Link key={index} to={path} className="text-sm hover:underline">
+                  {name}
                 </Link>
               ))}
             </div>
